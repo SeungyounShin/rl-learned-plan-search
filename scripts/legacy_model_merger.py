@@ -17,10 +17,10 @@ This script is used to merge huggingface model and test verl checkpoints from FS
 
 To merge FSDP checkpoints:
 ```sh
-python scripts/legacy_model_merger.py merge \
+python -m scripts.legacy_model_merger merge \
     --backend fsdp \
-    --local_dir checkpoints/verl_fsdp_gsm8k_examples/qwen2_5_0b5_fsdp_saveload/global_step_1/actor \
-    --target_dir /path/to/merged_hf_model
+    --local_dir checkpoints/search_r1_like_async_rl/qwen3-4b-search-r1/global_step_60/actor \
+    --target_dir checkpoints/search_r1_like_async_rl/qwen3-4b-search-r1/global_step_60/actor/huggingface
 ```
 
 To merge Megatron checkpoints:
