@@ -12,6 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# 
+# python -m examples.data_preprocess.preprocess_search_r1_dataset_w_selective_plan --hf_repo_id PeterJinGo/nq_hotpotqa_train --local_dir ~/data/searchR1_processed_w_selective_plan
+# 
 
 import argparse
 import logging
@@ -136,7 +139,12 @@ def main():
                     return process_single_row(row, current_split_name=split_name, row_index=row.name)
 
                 df_processed = df_raw.apply(apply_process_row, axis=1)
-                df_processed = df_processed[df_processed["data_source"] == "searchR1_hotpotqa"]
+                if split == "train":
+                    df_processed = df_processed[df_processed["data_source"] == "searchR1_hotpotqa"]
+                elif split == "test":
+                    # ['searchR1_nq', 'searchR1_triviaqa', 'searchR1_popqa', 'searchR1_hotpotqa', 'searchR1_2wikimultihopqa','searchR1_musique', 'searchR1_bamboogle']
+                    # 'searchR1_2wikimultihopqa','searchR1_musique', 'searchR1_bamboogle'
+                    df_processed = df_processed[df_processed["data_source"] == "searchR1_hotpotqa"]
 
                 # Save processed DataFrame
                 output_file_path = os.path.join(local_save_dir, f"{split}.parquet")
@@ -172,7 +180,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--local_dir",
-        default="~/data/searchR1_processed_direct",
+        default="~/data/searchR1_processed_w_selective_plan",
         help="Local directory to save the processed Parquet files.",
     )
     parser.add_argument("--hdfs_dir", default=None, help="Optional HDFS directory to copy the Parquet files to.")

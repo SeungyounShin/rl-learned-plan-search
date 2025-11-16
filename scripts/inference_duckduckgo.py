@@ -167,8 +167,8 @@ def free_search(query: str, k: int = 5) -> List[Dict]:
     """
     hits: List[Dict] = []
     # 뉴스 우선
-    hits.extend(ddg_search_news(query, k))
-    hits.extend(google_news_rss(query, k))
+    hits.extend(ddg_search_news(query, k, region="en-us"))
+    hits.extend(google_news_rss(query, k, lang="en", country="US"))
     # 일반 웹
     if len(hits) < k:
         hits.extend(ddg_search_text(query, k))
@@ -194,7 +194,8 @@ def extract_queries_from_tool_call(tool_call: Dict) -> List[str]:
 # ---------- 메인 루프 ----------
 
 def main() -> None:
-    q = sys.argv[1] if len(sys.argv) > 1 else "최근 엔비디아 26만장 GPU 관련해서 네이버클라우드가 엔비디아로 부터 공급받는 GPU 장수와 종류를 알려줘"
+    q = sys.argv[1] if len(sys.argv) > 1 else """
+이재명 대통령 당선일은 언제야?"""
 
     tok = AutoTokenizer.from_pretrained(MODEL_NAME, padding_side="left", use_fast=True)
     model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype=torch.bfloat16, device_map="auto")
@@ -249,6 +250,11 @@ def main() -> None:
         tool_response = "<tool_response>\n" + "\n\n---\n\n".join(results_blocks) + "\n</tool_response>"
         print("\033[90m" + tool_response + "\033[0m")
         msgs.append({"role": "user", "content": tool_response})
+
+
+    # push to hub
+    # model.push_to_hub('Seungyoun/Qwen3-4B-search-r1-w-selective-plan')
+    tok.push_to_hub('Seungyoun/Qwen3-4B-search-r1-w-selective-plan')
 
 if __name__ == "__main__":
     main()

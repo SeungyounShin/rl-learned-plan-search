@@ -540,7 +540,7 @@ class RayPPOTrainer:
         sample_first_action_think = []
         sample_think_length = []
 
-        for test_data in self.val_dataloader:
+        for test_data in tqdm(self.val_dataloader, desc='Evaluating...'):
             test_batch = DataProto.from_single_dict(test_data)
 
             if "uid" not in test_batch.non_tensor_batch:

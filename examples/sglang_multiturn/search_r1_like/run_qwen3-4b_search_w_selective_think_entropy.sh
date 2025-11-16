@@ -8,8 +8,8 @@ ulimit -n 65535
 PROJECT_DIR="$(pwd)"
 CONFIG_PATH="$PROJECT_DIR/examples/sglang_multiturn/config"
 
-TRAIN_DATA="$HOME/data/searchR1_processed_direct/train.parquet"
-VAL_DATA="$HOME/data/searchR1_processed_direct/test.parquet"
+TRAIN_DATA="$HOME/data/searchR1_processed_w_selective_plan/train.parquet"
+VAL_DATA="$HOME/data/searchR1_processed_w_selective_plan/test.parquet"
 
 # TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config.yaml"
 TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking.yaml"
@@ -37,7 +37,7 @@ python3 -m verl.trainer.main_ppo \
     data.filter_overlong_prompts=True \
     data.truncation='error' \
     data.return_raw_chat=True \
-    actor_rollout_ref.model.path=Qwen/Qwen3-4B-Instruct-2507 \
+    actor_rollout_ref.model.path=Seungyoun/Qwen3-1.7B-Non-Thinking \
     actor_rollout_ref.actor.optim.lr=5e-6 \
     actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.285 \
     actor_rollout_ref.model.use_remove_padding=True \
@@ -58,24 +58,25 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.fsdp_config.param_offload=False \
     actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
     actor_rollout_ref.rollout.max_model_len=32768 \
-    actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=1 \
+    actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=8 \
+    actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=8 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
     actor_rollout_ref.rollout.name=sglang \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.85 \
     actor_rollout_ref.rollout.n=12 \
-    actor_rollout_ref.rollout.multi_turn.max_assistant_turns=40 \
-    actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=1 \
+    actor_rollout_ref.rollout.multi_turn.max_assistant_turns=60 \
     actor_rollout_ref.actor.strategy=fsdp2 \
     actor_rollout_ref.ref.fsdp_config.param_offload=True \
     trainer.critic_warmup=0 \
     trainer.val_before_train=True \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='search_r1_like_async_rl' \
-    trainer.experiment_name='qwen3-4b-search-r1' \
+    trainer.experiment_name='qwen3-1.7b-plan-search' \
     trainer.n_gpus_per_node=8 \
     trainer.nnodes=1 \
-    trainer.save_freq=60 \
-    trainer.test_freq=10 \
+    trainer.save_freq=10 \
+    trainer.test_freq=60 \
+    trainer.resume_mode=auto \
     reward_model.reward_manager=dapo \
     data.train_files="$TRAIN_DATA" \
     data.val_files="$VAL_DATA"  \
