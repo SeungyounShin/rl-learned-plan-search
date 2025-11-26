@@ -12,7 +12,7 @@ TRAIN_DATA="$HOME/data/searchR1_processed_w_selective_plan/train.parquet"
 VAL_DATA="$HOME/data/searchR1_processed_w_selective_plan/test.parquet"
 
 # TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config.yaml"
-TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking.yaml"
+TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking_wo_goal.yaml"
 
 clip_ratio_low=0.2
 clip_ratio_high=0.2
@@ -42,7 +42,7 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.285 \
     actor_rollout_ref.model.use_remove_padding=True \
     actor_rollout_ref.actor.ppo_mini_batch_size=${train_prompt_bsz} \
-    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=1 \
+    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=8 \
     actor_rollout_ref.actor.use_kl_loss=False \
     actor_rollout_ref.actor.kl_loss_coef=0.0 \
     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
@@ -55,22 +55,20 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.policy_loss.kl_cov_ratio=${kl_cov_ratio} \
     actor_rollout_ref.actor.policy_loss.ppo_kl_coef=${ppo_kl_coef} \
     actor_rollout_ref.model.enable_gradient_checkpointing=True \
-    actor_rollout_ref.actor.fsdp_config.param_offload=False \
-    actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
     actor_rollout_ref.rollout.max_model_len=32768 \
     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=8 \
     actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=8 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
     actor_rollout_ref.rollout.name=sglang \
+    actor_rollout_ref.rollout.attention_backend=flashinfer \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.85 \
-    actor_rollout_ref.rollout.n=12 \
-    actor_rollout_ref.rollout.multi_turn.max_assistant_turns=60 \
-    actor_rollout_ref.ref.fsdp_config.param_offload=True \
+    actor_rollout_ref.rollout.n=8 \
+    actor_rollout_ref.rollout.multi_turn.max_assistant_turns=15 \
     trainer.critic_warmup=0 \
-    trainer.val_before_train=True \
+    trainer.val_before_train=False \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='search_r1_like_async_rl' \
-    trainer.experiment_name='qwen3-1.7b-plan-search' \
+    trainer.experiment_name='qwen3-1.7b-plan-search-wo-goal' \
     trainer.n_gpus_per_node=8 \
     trainer.nnodes=1 \
     trainer.save_freq=20 \

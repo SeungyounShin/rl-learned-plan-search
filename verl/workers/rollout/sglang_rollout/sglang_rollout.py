@@ -504,6 +504,9 @@ class SGLangRollout(BaseRollout):
 
         # attention backend will be changed to fa3 if not specified
         attention_backend = engine_kwargs.pop("attention_backend", None)
+        # Also check config.attention_backend (takes priority)
+        if hasattr(self.config, "attention_backend") and self.config.attention_backend is not None:
+            attention_backend = self.config.attention_backend
         max_running_requests = self.config.get("max_num_seqs", None)
 
         try:
