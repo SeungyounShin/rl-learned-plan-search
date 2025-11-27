@@ -12,7 +12,7 @@ TRAIN_DATA="$HOME/data/searchR1_processed_w_selective_plan/train.parquet"
 VAL_DATA="$HOME/data/searchR1_processed_w_selective_plan/test.parquet"
 
 # TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config.yaml"
-TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking_wo_goal.yaml"
+TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking_wo_status.yaml"
 
 clip_ratio_low=0.2
 clip_ratio_high=0.2
@@ -62,13 +62,13 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.rollout.name=sglang \
     actor_rollout_ref.rollout.attention_backend=flashinfer \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.85 \
-    actor_rollout_ref.rollout.n=8 \
-    actor_rollout_ref.rollout.multi_turn.max_assistant_turns=15 \
+    actor_rollout_ref.rollout.n=5 \
+    actor_rollout_ref.rollout.multi_turn.max_assistant_turns=5 \
     trainer.critic_warmup=0 \
     trainer.val_before_train=False \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='search_r1_like_async_rl' \
-    trainer.experiment_name='qwen3-1.7b-plan-search-wo-goal' \
+    trainer.experiment_name='qwen3-1.7b-plan-search-wo-status' \
     trainer.n_gpus_per_node=8 \
     trainer.nnodes=1 \
     trainer.save_freq=20 \
