@@ -144,7 +144,7 @@ def main():
                 elif split == "test":
                     # ['searchR1_nq', 'searchR1_triviaqa', 'searchR1_popqa', 'searchR1_hotpotqa', 'searchR1_2wikimultihopqa','searchR1_musique', 'searchR1_bamboogle']
                     # 'searchR1_2wikimultihopqa','searchR1_musique', 'searchR1_bamboogle'
-                    df_processed = df_processed[df_processed["data_source"] == "searchR1_hotpotqa"]
+                    df_processed = df_processed[df_processed["data_source"] == "searchR1_bamboogle"]
 
                 # Save processed DataFrame
                 output_file_path = os.path.join(local_save_dir, f"{split}.parquet")

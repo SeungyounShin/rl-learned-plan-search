@@ -33,9 +33,19 @@ DEFAULT_USER_CONTENT_PREFIX = (
     "between <tool_response> and </tool_response>. Invoke tools as needed, then provide the final answer inside "
     "<answer> and </answer> without extra explanation. For example, <answer>Beijing</answer>. Question: "
 )
+# DEFAULT_USER_CONTENT_PREFIX = (
+#     "Answer the given question. You must conduct reasoning inside <think> and </think> "
+#     "first every time you get new information. After reasoning, if you find you lack "
+#     "some knowledge, you can call a search engine by <tool_call> query </tool_call> "
+#     "and it will return the top searched results between <tool_response> and "
+#     "</tool_response>. You can search as many times as your want. If you find no "
+#     "further external knowledge needed, you can directly provide the answer inside "
+#     "<answer> and </answer>, without detailed illustrations. For example, "
+#     "<answer> Beijing </answer>. Question: "
+# )
 
 # 모델 경로는 그대로 사용하거나 바꾸세요.
-MODEL_NAME = "checkpoints/search_r1_like_async_rl/qwen3-4b-search-r1/global_step_60/actor/huggingface"
+MODEL_NAME = "/home/robin/SelectiveThink/checkpoints/search_r1_like_async_rl/qwen3-1.7b-plan-search/global_step_65/actor/huggingface"
 MAX_TURNS = 40
 MAX_RESPONSE_TOKENS = 2048
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -206,13 +216,13 @@ def main() -> None:
     for turn in range(MAX_TURNS):
         inputs = tok.apply_chat_template(
             msgs,
-            tools=[SEARCH_SCHEMA, THINKING_SCHEMA],
+            tools=[SEARCH_SCHEMA,THINKING_SCHEMA],
             add_generation_prompt=True,
             return_tensors="pt",
         ).to(DEVICE)
 
         out = model.generate(
-            inputs,
+            inputs.to(model.device),
             max_new_tokens=MAX_RESPONSE_TOKENS,
             temperature=0.7,
             top_p=0.95,
@@ -253,8 +263,8 @@ def main() -> None:
 
 
     # push to hub
-    # model.push_to_hub('Seungyoun/Qwen3-4B-search-r1-w-selective-plan')
-    tok.push_to_hub('Seungyoun/Qwen3-4B-search-r1-w-selective-plan')
+    model.push_to_hub('Seungyoun/Qwen3-1.7B-search-r1-w-selective-plan', private=True)
+    tok.push_to_hub('Seungyoun/Qwen3-1.7B-search-r1-w-selective-plan', private=True)
 
 if __name__ == "__main__":
     main()
