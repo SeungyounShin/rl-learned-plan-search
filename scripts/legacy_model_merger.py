@@ -19,8 +19,8 @@ To merge FSDP checkpoints:
 ```sh
 python -m scripts.legacy_model_merger merge \
     --backend fsdp \
-    --local_dir checkpoints/search_r1_like_async_rl/qwen3-4b-search-r1/global_step_60/actor \
-    --target_dir checkpoints/search_r1_like_async_rl/qwen3-4b-search-r1/global_step_60/actor/huggingface
+    --local_dir /home/robin/SelectiveThink/checkpoints/search_r1_like_async_rl/qwen3-1.7b-plan-search/global_step_65/actor \
+    --target_dir /home/robin/SelectiveThink/checkpoints/search_r1_like_async_rl/qwen3-1.7b-plan-search/global_step_65/actor/huggingface
 ```
 
 To merge Megatron checkpoints:
