@@ -1,0 +1,53 @@
+tools:
+  - class_name: verl.tools.search_tool.SearchTool
+    config:
+      retrieval_service_url: http://192.168.100.20:8000/retrieve
+      num_workers: 120
+      rate_limit: 120
+      timeout: 30
+      type: native
+    tool_schema:
+      type: function
+      function:
+        name: search
+        description: Searches the web for relevant information based on the given query.
+        parameters:
+          type: object
+          properties:
+            query_list:
+              type: array
+              items:
+                type: string
+              description: A list of fully-formed semantic queries. The tool will return search results for each query.
+          required:
+            - query_list
+  - class_name: verl.tools.thinking_tool.ThinkingTool
+    config:
+      type: native
+    tool_schema:
+      type: function
+      function:
+        name: thinking
+        description: >
+          Maintain a short private planning note.
+          Use it to clarify what you're trying to accomplish right now,
+          and summarize your current take (including anything that still feels shaky).
+          This is for internal guidance only and MUST NOT be surfaced verbatim to the user.
+        parameters:
+          type: object
+          properties:
+            goal:
+              type: string
+              description: >
+                The immediate sub-goal you are working on for the user
+                (e.g. "confirm factual support for claim", "collect background details").
+            status:
+              type: string
+              description: >
+                Your current read of the situation in 1-2 sentences,
+                including any part that may be incomplete, uncertain, or could be tightened.
+                Treat this as a working draft, not something you'd present yet.
+          required:
+            - goal
+            - status
+

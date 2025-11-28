@@ -38,8 +38,8 @@ from verl.utils.hdfs_io import copy, makedirs
 DEFAULT_SYSTEM_CONTENT = "You are a helpful and harmless assistant."
 DEFAULT_USER_CONTENT_PREFIX = (
     "Answer the given question. Call the `thinking` tool whenever a short planning note will help. "
-    "Fill the fields `goal`, and `next_step` to track your current focus, what you're trying to accomplish, "
-    "and the single next move. Use the `search` tool if you need external knowledge—the results will appear "
+    "Fill the fields `goal`, and `status` to track what you're trying to accomplish, "
+    "and your current read of the situation. Use the `search` tool if you need external knowledge—the results will appear "
     "between <tool_response> and </tool_response>. Invoke tools as needed, then provide the final answer inside "
     "<answer> and </answer> without extra explanation. For example, <answer>Beijing</answer>. Question: "
 )

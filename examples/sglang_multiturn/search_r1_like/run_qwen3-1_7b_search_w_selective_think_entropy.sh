@@ -12,7 +12,7 @@ TRAIN_DATA="$HOME/data/searchR1_processed_w_selective_plan/train.parquet"
 VAL_DATA="$HOME/data/searchR1_processed_w_selective_plan/test.parquet"
 
 # TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config.yaml"
-TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking_wo_status.yaml"
+TOOL_CONFIG="$CONFIG_PATH/tool_config/search_tool_config_with_thinking_wo_nextstep.yaml"
 
 clip_ratio_low=0.2
 clip_ratio_high=0.2
@@ -68,7 +68,7 @@ python3 -m verl.trainer.main_ppo \
     trainer.val_before_train=False \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='search_r1_like_async_rl' \
-    trainer.experiment_name='qwen3-1.7b-plan-search-wo-status' \
+    trainer.experiment_name='qwen3-1.7b-plan-search-wo-nextstep' \
     trainer.n_gpus_per_node=8 \
     trainer.nnodes=1 \
     trainer.save_freq=20 \
